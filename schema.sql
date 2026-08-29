@@ -1,0 +1,114 @@
+-- Supabase schema for Maulinondh
+
+-- Enable required extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Varkaris Table
+CREATE TABLE public.varkaris (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  registration_id TEXT UNIQUE NOT NULL,
+  qr_token TEXT UNIQUE,
+  name TEXT NOT NULL,
+  photo_url TEXT,
+  age INTEGER NOT NULL,
+  gender TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  address TEXT NOT NULL,
+  district TEXT NOT NULL,
+  
+  -- Medical
+  blood_group TEXT NOT NULL,
+  medical_conditions TEXT,
+  medications TEXT,
+  allergies TEXT,
+  additional_medical_information TEXT,
+  
+  -- Emergency Contact
+  guardian_name TEXT NOT NULL,
+  guardian_relationship TEXT NOT NULL,
+  guardian_phone TEXT NOT NULL,
+  secondary_guardian_name TEXT,
+  secondary_guardian_phone TEXT,
+  
+  -- Wari info
+  participating_with TEXT NOT NULL,
+  dindi_name TEXT,
+  dindi_id UUID, -- For future dindi tables
+  starting_location TEXT,
+  starting_latitude DOUBLE PRECISION,
+  starting_longitude DOUBLE PRECISION,
+  starting_place_id TEXT,
+  destination TEXT NOT NULL DEFAULT 'पंढरपूर',
+  
+  status TEXT NOT NULL DEFAULT 'PENDING_VERIFICATION',
+  
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- Dindis Table (placeholder for future extensibility)
+CREATE TABLE public.dindis (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name TEXT NOT NULL,
+  leader_user_id UUID REFERENCES auth.users(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- Incidents Table (placeholder for future extensibility)
+CREATE TABLE public.incidents (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  varkari_id UUID REFERENCES public.varkaris(id),
+  reported_by TEXT, -- not a foreign key as per requirements
+  assigned_to UUID REFERENCES auth.users(id),
+  description TEXT,
+  status TEXT DEFAULT 'OPEN',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- Orders Table (placeholder for future extensibility)
+CREATE TABLE public.orders (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  varkari_id UUID REFERENCES public.varkaris(id),
+  status TEXT DEFAULT 'PENDING',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- NFC Tags Table (placeholder for future extensibility)
+CREATE TABLE public.nfc_tags (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  varkari_id UUID REFERENCES public.varkaris(id),
+  tag_uid TEXT UNIQUE,
+  status TEXT DEFAULT 'ACTIVE',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- Row Level Security (RLS) Policies
+
+ALTER TABLE public.varkaris ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.dindis ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.incidents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.nfc_tags ENABLE ROW LEVEL SECURITY;
+
+-- Varkaris Policies
+-- 1. Users can read their own varkari profile
+CREATE POLICY "Users can view own varkari profile"
+  ON public.varkaris FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- 2. Users can insert their own varkari profile
+CREATE POLICY "Users can insert own varkari profile"
+  ON public.varkaris FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- 3. Users can update their own varkari profile (except status, etc. in real world, but kept simple here)
+CREATE POLICY "Users can update own varkari profile"
+  ON public.varkaris FOR UPDATE
+  USING (auth.uid() = user_id);
+
+-- Note: Admin/Police/Medical roles would be implemented here for real usage, e.g., 
+-- CREATE POLICY "Admins can do everything" ON public.varkaris FOR ALL USING (auth.jwt() ->> 'role' = 'ADMIN');
+
+-- Allow public inserts for registration if they don't have user_id yet (optional depending on exact auth flow)
+-- For this setup, we assume they register/login to Supabase Auth first, then create Varkari record.

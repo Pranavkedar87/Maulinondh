@@ -1,0 +1,184 @@
+{
+  "app": {
+    "name": "MAULINOND",
+    "tagline": "Wari Safe, Mauli's Care.",
+    "coreMessage1": "Every Varkari, an Identity.",
+    "coreMessage2": "Every Journey, Safer."
+  },
+  "language": {
+    "select": "Select Language",
+    "mr": "मराठी",
+    "hi": "हिंदी",
+    "en": "English"
+  },
+  "home": {
+    "registerBtn": "Register",
+    "loginBtn": "Login",
+    "features": {
+      "regTitle": "Varkari Registration",
+      "regDesc": "Safely register your essential information.",
+      "medTitle": "Emergency Information",
+      "medDesc": "Save blood group, medical details & contacts.",
+      "safeTitle": "Safe Wari",
+      "safeDesc": "Helps varkaris get assistance in emergencies.",
+      "helpTitle": "Help & Contact",
+      "helpDesc": "Connect with family and rescue systems."
+    },
+    "quotes": [
+      "Wari of devotion, care for every Varkari.",
+      "Mauli's Wari, Responsibility of Safety.",
+      "On the path to Pandhari, every Varkari is safe.",
+      "Devotion in Vitthal's name, safety with Maulinondh."
+    ]
+  },
+  "login": {
+    "title": "Login",
+    "mobile": "Mobile Number",
+    "password": "Password",
+    "rememberMe": "Remember Me",
+    "loginBtn": "Login",
+    "forgotPassword": "Forgot Password?",
+    "newUser": "New User? Register"
+  },
+  "registration": {
+    "step1": "Personal",
+    "step2": "Medical",
+    "step3": "Emergency",
+    "step4": "Wari",
+    "nextBtn": "Next",
+    "prevBtn": "Back",
+    "submitBtn": "Complete Registration",
+    "confirmTitle": "Check Your Information",
+    "confirmCheckbox": "The information provided by me is correct.",
+    "cancelBtn": "Cancel",
+    "personal": {
+      "title": "Personal Information",
+      "subtitle": "Please enter your personal details securely.",
+      "fullName": "Full Name *",
+      "age": "Age *",
+      "gender": "Gender",
+      "mobile": "Mobile Number *",
+      "village": "Village / Address *",
+      "district": "District *",
+      "genders": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      }
+    },
+    "medical": {
+      "title": "Medical Information",
+      "subtitle": "Provide emergency and medical information.",
+      "photoTitle": "Varkari Photo",
+      "noPhoto": "No Photo",
+      "openCamera": "Open Camera",
+      "uploadImage": "Upload Image",
+      "photoHint": "Please capture or upload a clear photo of the Varkari. This photo will be printed on the ID card.",
+      "cameraError": "Camera permission denied or unavailable.",
+      "capture": "Capture",
+      "cancel": "Cancel",
+      "bloodGroup": "Blood Group *",
+      "conditions": "Medical Conditions",
+      "conditionsPlaceholder": "e.g. Diabetes, Asthma (Optional)",
+      "medication": "Current Medication",
+      "medicationPlaceholder": "Optional",
+      "allergies": "Allergies",
+      "allergiesPlaceholder": "Optional",
+      "additional": "Additional Medical Information",
+      "photo": "Profile Photo",
+      "retake": "Retake",
+      "remove": "Remove"
+    },
+    "emergency": {
+      "title": "Emergency Contact",
+      "name": "Emergency Contact Name *",
+      "relationship": "Relationship *",
+      "phone": "Emergency Contact Number *",
+      "secondaryTitle": "Secondary Contact (Optional)",
+      "secondaryName": "Secondary Contact Name",
+      "secondaryPhone": "Secondary Contact Number",
+      "relationships": {
+        "father": "Father",
+        "mother": "Mother",
+        "son": "Son",
+        "daughter": "Daughter",
+        "brother": "Brother",
+        "sister": "Sister",
+        "husband": "Husband",
+        "wife": "Wife",
+        "relative": "Relative",
+        "other": "Other"
+      }
+    },
+    "wari": {
+      "title": "Wari Information",
+      "participatingWith": "Participating With",
+      "dindiName": "Dindi / Group Name",
+      "startingLocation": "Starting Location",
+      "startingLocationHint": "* Type location manually",
+      "destination": "Destination",
+      "types": {
+        "family": "Family",
+        "dindi": "Dindi",
+        "group": "Group",
+        "alone": "Alone"
+      }
+    }
+  },
+  "review": {
+    "photo": "Profile Photo",
+    "personal": "Personal Information",
+    "name": "Name",
+    "ageGender": "Age / Gender",
+    "mobile": "Mobile",
+    "location": "Location",
+    "medical": "Medical Information",
+    "bloodGroup": "Blood Group",
+    "condition": "Condition",
+    "medication": "Medication",
+    "allergies": "Allergies",
+    "emergency": "Emergency Contact",
+    "phone": "Phone",
+    "wari": "Wari Information",
+    "type": "Type",
+    "dindi": "Dindi",
+    "route": "Route",
+    "processing": "Processing...",
+    "editInfo": "Edit Information"
+  },
+  "success": {
+    "title": "Registration Successful!",
+    "message": "Your Varkari registration has been completed successfully.",
+    "regId": "Registration ID:",
+    "verification": "Your information has been sent to the administration for verification.",
+    "qrNote": "The QR safety band will be issued by the administration.",
+    "noticeTitle": "Important Notice",
+    "noticeDesc": "Your information has been sent to the administration for verification. The QR safety band will be issued by the administration.",
+    "goDashboard": "Go to Dashboard"
+  },
+  "dashboard": {
+    "greeting": "Namaskar, {name} Mauli!",
+    "status": "Registration Status",
+    "profile": "My Profile",
+    "qrStatus": "QR Band Status",
+    "editBtn": "Edit",
+    "qrIssued": "Band Issued - Your safety band has been issued by the administration.",
+    "qrPending": "Band Not Yet Issued - Please contact the nearest administration help center.",
+    "statusPendingDesc": "Your information is pending verification with the administration.",
+    "statusVerifiedDesc": "Your information has been successfully verified.",
+    "emergencyHelpTitle": "Emergency Help",
+    "emergencyDesc": "Click the button below for medical help or police assistance in an emergency.",
+    "emergencyBtn": "Emergency Alert",
+    "logout": "Logout",
+    "edit": "Edit",
+    "profileName": "Name",
+    "profileAge": "Age / Blood Group",
+    "profileMobile": "Mobile",
+    "profileAddress": "Address"
+  },
+  "status": {
+    "PENDING_VERIFICATION": "Pending Verification",
+    "VERIFIED": "Verified",
+    "ACTION_REQUIRED": "Action Required"
+  }
+}
