@@ -16,7 +16,7 @@ const Step1Panchayat = ({ data, update }) => {
     <form onSubmit={handleSubmit}>
       <div style={{ background: 'var(--primary-dark)', margin: '-1.5rem -1.5rem 2rem -1.5rem', padding: '2rem 1.5rem', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', color: 'white' }}>
         <div className="flex items-center gap-3 mb-2">
-          {tPrefix.includes('gramPanchayat') ? <Building size={28} color="var(--primary)" /> : <Users size={28} color="var(--primary)" />}
+          <Building size={28} color="var(--primary)" />
           <h2 style={{ fontSize: '1.5rem', margin: 0, color: 'white' }}>{t('gramPanchayat.step1Title')}</h2>
         </div>
       </div>
