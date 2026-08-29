@@ -47,20 +47,37 @@ const Dashboard = () => {
   }, [navigate]);
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return <div className="min-h-screen flex items-center justify-center">Loading Safety Dashboard...</div>;
   }
 
-  // Fallback dummy data if no DB record found
-  const varkari = varkariData || {
-    name: 'Ganesh',
-    status: 'PENDING_VERIFICATION',
-    qr_token: null,
-    age: 45,
-    phone: '9876543210',
-    blood_group: 'O+',
-    address: 'Pune, Maharashtra',
-    photo_url: null
-  };
+  // If user is authenticated but has no varkari profile in DB
+  if (!varkariData) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center" style={{ background: 'var(--bg-color)' }}>
+        <h2 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '1rem' }}>No Profile Found</h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
+          We could not find a pilgrim registration linked to this mobile number. Please complete your registration first.
+        </p>
+        <button 
+          className="btn btn-primary"
+          onClick={() => navigate('/register')}
+        >
+          Register Now
+        </button>
+        <button 
+          className="btn btn-outline mt-4"
+          onClick={async () => {
+            await supabase.auth.signOut();
+            navigate('/');
+          }}
+        >
+          Logout
+        </button>
+      </div>
+    );
+  }
+
+  const varkari = varkariData;
 
   const getStatusBadge = (status) => {
     switch(status) {
