@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { supabase } from '../services/supabase';
-import { Shield, ChevronLeft, Globe } from 'lucide-react';
+import { Shield, ChevronLeft, Globe, User, Users } from 'lucide-react';
 import logo from '../assets/logo.png';
 import LanguageSelector from '../components/LanguageSelector';
 
@@ -10,7 +10,10 @@ const Login = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
   const [showLangModal, setShowLangModal] = useState(false);
+  const [loginType, setLoginType] = useState('PILGRIM'); // 'PILGRIM' or 'TEAM_LEADER'
+  
   const [mobile, setMobile] = useState('');
+  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,10 +23,13 @@ const Login = () => {
     setLoading(true);
     setError('');
 
-    // Format mobile for Supabase if needed (e.g., adding +91 if not present, though assuming standard email/password mock for now)
-    // Actually, user requested Mobile + Password. We will use a dummy email mapping for this prototype or standard phone auth.
-    // Assuming standard email mapping for hackathon: mobile@maulinondh.com
-    const email = `${mobile}@maulinondh.com`;
+    let email = '';
+    if (loginType === 'PILGRIM') {
+      email = `${mobile}@maulinondh.com`;
+    } else {
+      // User ID for Team Leader is MN-TL-2026-XXXXXX
+      email = `${userId.toLowerCase()}@maulinondh.com`;
+    }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -70,25 +76,71 @@ const Login = () => {
 
       <main className="container flex-grow flex flex-col items-center justify-center pt-8 pb-12">
         <div className="w-full" style={{ maxWidth: '420px' }}>
+          
+          {/* Login Type Tabs */}
+          <div className="flex mb-4" style={{ background: '#f1f5f9', padding: '0.25rem', borderRadius: '12px' }}>
+            <button 
+              className="flex-1 py-2 flex justify-center items-center gap-2 rounded-lg transition-colors"
+              style={{ 
+                background: loginType === 'PILGRIM' ? 'white' : 'transparent',
+                boxShadow: loginType === 'PILGRIM' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                color: loginType === 'PILGRIM' ? 'var(--primary-dark)' : 'var(--text-muted)',
+                fontWeight: loginType === 'PILGRIM' ? 'bold' : 'normal'
+              }}
+              onClick={() => { setLoginType('PILGRIM'); setError(''); }}
+            >
+              <User size={16} /> Pilgrim
+            </button>
+            <button 
+              className="flex-1 py-2 flex justify-center items-center gap-2 rounded-lg transition-colors"
+              style={{ 
+                background: loginType === 'TEAM_LEADER' ? 'white' : 'transparent',
+                boxShadow: loginType === 'TEAM_LEADER' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                color: loginType === 'TEAM_LEADER' ? 'var(--primary-dark)' : 'var(--text-muted)',
+                fontWeight: loginType === 'TEAM_LEADER' ? 'bold' : 'normal'
+              }}
+              onClick={() => { setLoginType('TEAM_LEADER'); setError(''); }}
+            >
+              <Users size={16} /> Team Leader
+            </button>
+          </div>
+
           <div className="card" style={{ padding: '2.5rem 2rem', boxShadow: 'var(--shadow-lg)', border: 'none' }}>
             <div className="text-center mb-8 flex flex-col items-center">
               <img src={logo} alt="Maulinondh Logo" style={{ width: '80px', height: '80px', objectFit: 'contain', marginBottom: '1.25rem' }} />
-              <h2 style={{ fontSize: '1.75rem', color: 'var(--text-main)', margin: 0, fontWeight: 700 }}>{t('login.title')}</h2>
+              <h2 style={{ fontSize: '1.75rem', color: 'var(--text-main)', margin: 0, fontWeight: 700 }}>
+                {loginType === 'PILGRIM' ? t('login.title') : 'Team Leader Login'}
+              </h2>
             </div>
             {error && <div style={{ color: 'red', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
             
             <form onSubmit={handleLogin}>
-              <div className="input-group">
-                <label>{t('login.mobile')}</label>
-                <input 
-                  type="tel" 
-                  className="input" 
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                  placeholder="9876543210"
-                  required 
-                />
-              </div>
+              {loginType === 'PILGRIM' ? (
+                <div className="input-group">
+                  <label>{t('login.mobile')}</label>
+                  <input 
+                    type="tel" 
+                    className="input" 
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                    placeholder="9876543210"
+                    required 
+                  />
+                </div>
+              ) : (
+                <div className="input-group">
+                  <label>User ID (Registration ID)</label>
+                  <input 
+                    type="text" 
+                    className="input" 
+                    value={userId}
+                    onChange={(e) => setUserId(e.target.value)}
+                    placeholder="MN-TL-2026-XXXXXX"
+                    style={{ textTransform: 'uppercase' }}
+                    required 
+                  />
+                </div>
+              )}
 
               <div className="input-group">
                 <label>{t('login.password')}</label>

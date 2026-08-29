@@ -9,7 +9,7 @@ const Step3Emergency = ({ data, update }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/register/team-leader/step4');
+    navigate('/register/team-leader/review');
   };
 
   return (

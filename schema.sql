@@ -35,11 +35,18 @@ CREATE TABLE public.varkaris (
   participating_with TEXT NOT NULL,
   dindi_name TEXT,
   dindi_id UUID, -- For future dindi tables
+  team_leader_id UUID REFERENCES public.team_leaders(id),
+  team_leader_user_id UUID REFERENCES auth.users(id),
   starting_location TEXT,
   starting_latitude DOUBLE PRECISION,
   starting_longitude DOUBLE PRECISION,
   starting_place_id TEXT,
   destination TEXT NOT NULL DEFAULT 'पंढरपूर',
+  
+  -- Live Location Info
+  current_latitude DOUBLE PRECISION,
+  current_longitude DOUBLE PRECISION,
+  location_updated_at TIMESTAMP WITH TIME ZONE,
   
   status TEXT NOT NULL DEFAULT 'PENDING_VERIFICATION',
   
@@ -107,6 +114,21 @@ CREATE POLICY "Users can update own varkari profile"
   ON public.varkaris FOR UPDATE
   USING (auth.uid() = user_id);
 
+-- 4. Team Leaders can view own team members
+CREATE POLICY "Team Leaders can view own team members"
+  ON public.varkaris FOR SELECT
+  USING (auth.uid() = team_leader_user_id);
+
+-- 5. Team Leaders can insert own team members
+CREATE POLICY "Team Leaders can insert own team members"
+  ON public.varkaris FOR INSERT
+  WITH CHECK (auth.uid() = team_leader_user_id);
+
+-- 6. Team Leaders can update own team members
+CREATE POLICY "Team Leaders can update own team members"
+  ON public.varkaris FOR UPDATE
+  USING (auth.uid() = team_leader_user_id);
+
 -- Note: Admin/Police/Medical roles would be implemented here for real usage, e.g., 
 -- CREATE POLICY "Admins can do everything" ON public.varkaris FOR ALL USING (auth.jwt() ->> 'role' = 'ADMIN');
 
@@ -159,6 +181,8 @@ CREATE TABLE public.team_leaders (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   registration_id TEXT UNIQUE NOT NULL,
+  generated_password TEXT,
+
   
   -- Leader Info
   full_name TEXT NOT NULL,

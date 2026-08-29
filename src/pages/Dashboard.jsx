@@ -52,7 +52,19 @@ const Dashboard = () => {
           }
         }
 
+        if (role === 'TEAM_LEADER') {
+          navigate('/team-leader-dashboard', { state: { profileData } });
+          return;
+        }
+
         if (profileData) {
+          // If varkari is linked to a team leader, fetch the leader's emergency contact
+          if (role === 'VARKARI' && profileData.team_leader_id) {
+            const { data: leaderData } = await supabase.from('team_leaders').select('full_name, mobile_number, emergency_contact_name, emergency_contact_number').eq('id', profileData.team_leader_id).single();
+            if (leaderData) {
+              profileData._teamLeader = leaderData;
+            }
+          }
           setVarkariData({ ...profileData, _role: role });
         }
 
@@ -269,15 +281,30 @@ const Dashboard = () => {
           <h2 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--danger)' }}>
             <AlertTriangle size={18} /> {t('dashboard.emergencyHelpTitle')}
           </h2>
-          <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            {t('dashboard.emergencyDesc')}
-          </p>
-          <button 
+          
+          {varkari._teamLeader ? (
+            <div style={{ marginBottom: '1rem', padding: '1rem', background: '#FEF2F2', borderRadius: 'var(--radius-md)' }}>
+              <div style={{ fontSize: '0.9rem', color: 'var(--danger)', fontWeight: 'bold', marginBottom: '0.25rem' }}>Team Leader / Emergency Contact</div>
+              <div style={{ fontWeight: '500' }}>{varkari._teamLeader.emergency_contact_name || varkari._teamLeader.full_name}</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', marginTop: '0.25rem' }}>
+                <a href={`tel:${varkari._teamLeader.emergency_contact_number || varkari._teamLeader.mobile_number}`} style={{ color: 'var(--danger)' }}>
+                  {varkari._teamLeader.emergency_contact_number || varkari._teamLeader.mobile_number}
+                </a>
+              </div>
+            </div>
+          ) : (
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              {t('dashboard.emergencyDesc')}
+            </p>
+          )}
+
+          <a 
+            href={`tel:${varkari._teamLeader ? (varkari._teamLeader.emergency_contact_number || varkari._teamLeader.mobile_number) : '108'}`}
             className="btn w-full flex items-center justify-center gap-2"
-            style={{ padding: '1rem', fontSize: '1.1rem', background: 'var(--danger)', color: 'white', border: 'none' }}
+            style={{ padding: '1rem', fontSize: '1.1rem', background: 'var(--danger)', color: 'white', border: 'none', textDecoration: 'none' }}
           >
             <AlertTriangle size={20} /> {t('dashboard.emergencyBtn')}
-          </button>
+          </a>
         </div>
       </main>
 

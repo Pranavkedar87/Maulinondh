@@ -15,8 +15,7 @@ const TeamLeaderFlow = () => {
     if (pathname.includes('/step1')) return 1;
     if (pathname.includes('/step2')) return 2;
     if (pathname.includes('/step3')) return 3;
-    if (pathname.includes('/step4')) return 4;
-    if (pathname.includes('/review')) return 5;
+    if (pathname.includes('/review')) return 4;
     return 1;
   };
   const currentStep = getStepNumber(location.pathname);
@@ -27,9 +26,9 @@ const TeamLeaderFlow = () => {
 
   return (
     <>
-      {currentStep <= 4 && (
+      {currentStep <= 3 && (
         <div className="step-indicator px-4">
-          {[1, 2, 3, 4].map((step) => (
+          {[1, 2, 3].map((step) => (
             <div key={step} className={`step-dot ${currentStep === step ? 'active' : ''} ${currentStep > step ? 'completed' : ''}`}>
               {step}
             </div>
@@ -42,7 +41,6 @@ const TeamLeaderFlow = () => {
           <Route path="step1" element={<Step1Leader data={formData} update={updateFormData} />} />
           <Route path="step2" element={<Step2Team data={formData} update={updateFormData} />} />
           <Route path="step3" element={<Step3Emergency data={formData} update={updateFormData} />} />
-          <Route path="step4" element={<Step4Details data={formData} update={updateFormData} />} />
           <Route path="review" element={<Review data={formData} />} />
         </Routes>
       </div>

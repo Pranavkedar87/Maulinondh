@@ -15,16 +15,26 @@ const Review = ({ data }) => {
     setError(null);
 
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const userId = sessionData.session?.user?.id || null;
-
       // Generate a unique registration ID MN-TL-2026-XXXXXX
       const randomNum = Math.floor(100000 + Math.random() * 900000);
       const regId = 'MN-TL-2026-' + randomNum;
+      const generatedPassword = Math.random().toString(36).slice(-6).toUpperCase();
+      const email = `${regId.toLowerCase()}@maulinondh.com`;
+
+      // 1. Sign up the user in Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: email,
+        password: generatedPassword,
+      });
+
+      if (authError) throw authError;
+
+      const userId = authData.user?.id;
 
       const payload = {
         user_id: userId,
         registration_id: regId,
+        generated_password: generatedPassword,
         full_name: data.fullName || '',
         mobile_number: data.mobile || '',
         email: data.email || '',
@@ -44,11 +54,6 @@ const Review = ({ data }) => {
         emergency_contact_number: data.emerPhone || '',
         alternate_contact_name: data.altName || '',
         alternate_contact_number: data.altPhone || '',
-        main_coordinator_name: data.coordName || '',
-        coordinator_phone: data.coordPhone || '',
-        meeting_location: data.meetingPoint || '',
-        preferred_communication: data.communication || '',
-        notes: data.notes || '',
         status: 'PENDING_VERIFICATION'
       };
 
@@ -57,7 +62,9 @@ const Review = ({ data }) => {
         .insert([payload]);
 
       if (dbError) throw dbError;
-      navigate('/register/team-leader/success', { state: { regId } });
+      
+      // Navigate to success and pass credentials to show to user
+      navigate('/register/team-leader/success', { state: { regId, generatedPassword } });
     } catch (err) {
       console.error(err);
       setError(err.message);
@@ -90,7 +97,7 @@ const Review = ({ data }) => {
       </div>
 
       <div className="flex justify-between mt-6">
-        <button type="button" className="btn btn-outline" onClick={() => navigate('/register/team-leader/step4')}>
+        <button type="button" className="btn btn-outline" onClick={() => navigate('/register/team-leader/step3')}>
           ← {t('registration.prevBtn')}
         </button>
         <button type="submit" className="btn btn-primary" disabled={loading}>

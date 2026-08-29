@@ -3,6 +3,7 @@ import { useLanguage } from './context/LanguageContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import TeamLeaderDashboard from './pages/TeamLeaderDashboard';
 import Registration from './pages/Registration';
 import PublicProfile from './pages/PublicProfile';
 
@@ -19,6 +20,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/team-leader-dashboard/*" element={<TeamLeaderDashboard />} />
         <Route path="/register/*" element={<Registration />} />
         {/* Public QR scan profile — no login required */}
         <Route path="/profile/:registrationId" element={<PublicProfile />} />
