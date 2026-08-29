@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
-import logo from '../../assets/logo.png';
+import { useLanguage } from '../../../context/LanguageContext';
+import logo from '../../../assets/logo.png';
 import { Globe, ShieldAlert, CheckCircle2 } from 'lucide-react';
-import LanguageSelector from '../../components/LanguageSelector';
+import LanguageSelector from '../../../components/LanguageSelector';
 
 const Success = () => {
   const { t, language } = useLanguage();

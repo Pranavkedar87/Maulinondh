@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Webcam from 'react-webcam';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext';
 import { Camera, RefreshCw, X, Upload, Heart } from 'lucide-react';
 
 const Step2Medical = ({ data, update }) => {
@@ -41,7 +41,7 @@ const Step2Medical = ({ data, update }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/register/step3');
+    navigate('/register/varkari/step3');
   };
 
   return (
@@ -192,7 +192,7 @@ const Step2Medical = ({ data, update }) => {
       </div>
 
       <div className="flex justify-between mt-6">
-        <button type="button" className="btn btn-outline" onClick={() => navigate('/register/step1')}>
+        <button type="button" className="btn btn-outline" onClick={() => navigate('/register/varkari/step1')}>
           ← {t('registration.prevBtn')}
         </button>
         <button type="submit" className="btn btn-primary">

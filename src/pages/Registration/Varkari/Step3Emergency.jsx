@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext';
 
 const Step3Emergency = ({ data, update }) => {
   const { t } = useLanguage();
@@ -8,7 +8,7 @@ const Step3Emergency = ({ data, update }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/register/step4');
+    navigate('/register/varkari/step4');
   };
 
   const relationships = [
@@ -89,7 +89,7 @@ const Step3Emergency = ({ data, update }) => {
       </div>
 
       <div className="flex justify-between mt-6">
-        <button type="button" className="btn btn-outline" onClick={() => navigate('/register/step2')}>
+        <button type="button" className="btn btn-outline" onClick={() => navigate('/register/varkari/step2')}>
           ← {t('registration.prevBtn')}
         </button>
         <button type="submit" className="btn btn-primary">

@@ -27,15 +27,35 @@ const Dashboard = () => {
         setUser(session.user);
 
         // Fetch varkari profile
-        const { data, error } = await supabase
-          .from('varkaris')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .single();
+        
+        let profileData = null;
+        let role = null;
 
+        // Try Varkari
+        let { data } = await supabase.from('varkaris').select('*').eq('user_id', session.user.id).single();
         if (data) {
-          setVarkariData(data);
+          profileData = data;
+          role = 'VARKARI';
+        } else {
+          // Try Gram Panchayat
+          let { data: gpData } = await supabase.from('gram_panchayats').select('*').eq('user_id', session.user.id).single();
+          if (gpData) {
+            profileData = gpData;
+            role = 'GRAM_PANCHAYAT';
+          } else {
+            // Try Team Leader
+            let { data: tlData } = await supabase.from('team_leaders').select('*').eq('user_id', session.user.id).single();
+            if (tlData) {
+              profileData = tlData;
+              role = 'TEAM_LEADER';
+            }
+          }
         }
+
+        if (profileData) {
+          setVarkariData({ ...profileData, _role: role });
+        }
+
       } catch (err) {
         console.error('Error fetching profile', err);
       } finally {
@@ -177,34 +197,70 @@ const Dashboard = () => {
           </div>
         </div>
 
+        
         {/* Profile Card */}
         <div className="card mb-4">
           <div className="flex items-center justify-between mb-4">
             <h2 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary-dark)' }}>
-              <User size={18} /> {t('dashboard.profile')}
+              <User size={18} /> {varkari._role === 'GRAM_PANCHAYAT' ? 'Panchayat Profile' : varkari._role === 'TEAM_LEADER' ? 'Team/Dindi Profile' : t('dashboard.profile')}
             </h2>
-            <button className="btn btn-outline" style={{ padding: '0.25rem 0.75rem', fontSize: '0.875rem', background: 'white' }}>
-              {t('dashboard.edit')}
-            </button>
           </div>
           
           <div className="flex flex-col gap-3" style={{ fontSize: '0.95rem', color: 'var(--text-main)' }}>
-            <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
-              <span style={{ color: 'var(--text-muted)' }}>{t('dashboard.profileName')}</span>
-              <span className="font-medium">{varkari.name}</span>
-            </div>
-            <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
-              <span style={{ color: 'var(--text-muted)' }}>{t('dashboard.profileAge')}</span>
-              <span className="font-medium">{varkari.age} / {varkari.blood_group}</span>
-            </div>
-            <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
-              <span style={{ color: 'var(--text-muted)' }}>{t('dashboard.profileMobile')}</span>
-              <span className="font-medium">{varkari.phone}</span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span style={{ color: 'var(--text-muted)' }}>{t('dashboard.profileAddress')}</span>
-              <span className="font-medium">{varkari.address}</span>
-            </div>
+            {varkari._role === 'VARKARI' && (
+              <>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>{t('dashboard.profileName')}</span>
+                  <span className="font-medium">{varkari.name}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>{t('dashboard.profileAge')}</span>
+                  <span className="font-medium">{varkari.age} / {varkari.blood_group}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>{t('dashboard.profileMobile')}</span>
+                  <span className="font-medium">{varkari.phone}</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span style={{ color: 'var(--text-muted)' }}>{t('dashboard.profileAddress')}</span>
+                  <span className="font-medium">{varkari.address}</span>
+                </div>
+              </>
+            )}
+            
+            {varkari._role === 'GRAM_PANCHAYAT' && (
+              <>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Panchayat Name</span>
+                  <span className="font-medium">{varkari.panchayat_name}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Village / District</span>
+                  <span className="font-medium">{varkari.village_name}, {varkari.district}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Contact</span>
+                  <span className="font-medium">{varkari.official_contact}</span>
+                </div>
+              </>
+            )}
+
+            {varkari._role === 'TEAM_LEADER' && (
+              <>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Leader Name</span>
+                  <span className="font-medium">{varkari.full_name}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Team Name</span>
+                  <span className="font-medium">{varkari.team_name}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--primary-light)' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Size</span>
+                  <span className="font-medium">{varkari.team_size} Varkaris</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
 

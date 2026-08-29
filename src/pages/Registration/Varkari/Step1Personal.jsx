@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext';
 import { Shield } from 'lucide-react';
 
 const Step1Personal = ({ data, update }) => {
@@ -9,7 +9,7 @@ const Step1Personal = ({ data, update }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/register/step2');
+    navigate('/register/varkari/step2');
   };
 
   return (

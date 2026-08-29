@@ -112,3 +112,118 @@ CREATE POLICY "Users can update own varkari profile"
 
 -- Allow public inserts for registration if they don't have user_id yet (optional depending on exact auth flow)
 -- For this setup, we assume they register/login to Supabase Auth first, then create Varkari record.
+
+-- Gram Panchayats Table
+CREATE TABLE public.gram_panchayats (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  registration_id TEXT UNIQUE NOT NULL,
+  
+  -- Panchayat Info
+  panchayat_name TEXT NOT NULL,
+  village_name TEXT NOT NULL,
+  taluka TEXT NOT NULL,
+  district TEXT NOT NULL,
+  office_address TEXT NOT NULL,
+  pincode TEXT,
+  official_contact TEXT NOT NULL,
+  official_email TEXT,
+  registration_id_gov TEXT,
+  
+  -- Authority Contact
+  primary_contact_name TEXT NOT NULL,
+  primary_designation TEXT NOT NULL,
+  primary_contact_number TEXT NOT NULL,
+  primary_email TEXT,
+  alternate_contact_name TEXT,
+  alternate_contact_number TEXT,
+  
+  -- Route Info
+  wari_route TEXT,
+  starting_point TEXT,
+  major_checkpoint TEXT,
+  destination TEXT,
+  medical_facility BOOLEAN DEFAULT false,
+  drinking_water BOOLEAN DEFAULT false,
+  toilet_facility BOOLEAN DEFAULT false,
+  emergency_control_room TEXT,
+  
+  status TEXT NOT NULL DEFAULT 'PENDING_VERIFICATION',
+  
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- Team Leaders Table
+CREATE TABLE public.team_leaders (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  registration_id TEXT UNIQUE NOT NULL,
+  
+  -- Leader Info
+  full_name TEXT NOT NULL,
+  mobile_number TEXT NOT NULL,
+  email TEXT,
+  age INTEGER,
+  address TEXT,
+  village TEXT,
+  district TEXT,
+  
+  -- Team Info
+  team_name TEXT NOT NULL,
+  team_id TEXT,
+  team_size INTEGER,
+  starting_location TEXT,
+  destination TEXT,
+  wari_route TEXT,
+  dindi_identifier TEXT,
+  group_description TEXT,
+  
+  -- Emergency Info
+  emergency_contact_name TEXT,
+  emergency_contact_number TEXT,
+  alternate_contact_name TEXT,
+  alternate_contact_number TEXT,
+  
+  -- Coordination Info
+  main_coordinator_name TEXT,
+  coordinator_phone TEXT,
+  meeting_location TEXT,
+  preferred_communication TEXT,
+  notes TEXT,
+  
+  status TEXT NOT NULL DEFAULT 'PENDING_VERIFICATION',
+  
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- RLS for new tables
+ALTER TABLE public.gram_panchayats ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.team_leaders ENABLE ROW LEVEL SECURITY;
+
+-- Gram Panchayats Policies
+CREATE POLICY "Users can view own gram_panchayat profile"
+  ON public.gram_panchayats FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own gram_panchayat profile"
+  ON public.gram_panchayats FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own gram_panchayat profile"
+  ON public.gram_panchayats FOR UPDATE
+  USING (auth.uid() = user_id);
+
+-- Team Leaders Policies
+CREATE POLICY "Users can view own team_leader profile"
+  ON public.team_leaders FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own team_leader profile"
+  ON public.team_leaders FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own team_leader profile"
+  ON public.team_leaders FOR UPDATE
+  USING (auth.uid() = user_id);

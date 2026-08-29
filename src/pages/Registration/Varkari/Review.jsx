@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
-import { supabase } from '../../services/supabase';
+import { useLanguage } from '../../../context/LanguageContext';
+import { supabase } from '../../../services/supabase';
 import { Camera, User, Heart, Phone, MapPin, CheckCircle } from 'lucide-react';
 
 const Review = ({ data }) => {
@@ -200,7 +200,7 @@ const Review = ({ data }) => {
           >
             {loading ? t('review.processing') : <><CheckCircle size={18} /> {t('registration.submitBtn')}</>}
           </button>
-          <button type="button" className="btn btn-outline w-full" onClick={() => navigate('/register/step4')} disabled={loading}>
+          <button type="button" className="btn btn-outline w-full" onClick={() => navigate('/register/varkari/step4')} disabled={loading}>
             ← {t('review.editInfo')}
           </button>
         </div>

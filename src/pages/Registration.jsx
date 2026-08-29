@@ -1,74 +1,85 @@
-import React, { useState } from 'react';
-import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import Step1Personal from './Registration/Step1Personal';
-import Step2Medical from './Registration/Step2Medical';
-import Step3Emergency from './Registration/Step3Emergency';
-import Step4Wari from './Registration/Step4Wari';
-import Review from './Registration/Review';
-import Success from './Registration/Success';
-import { ChevronLeft, Globe } from 'lucide-react';
+import { Globe, User, Building, Users } from 'lucide-react';
 import logo from '../assets/logo.png';
 import LanguageSelector from '../components/LanguageSelector';
+
+import VarkariFlow from './Registration/VarkariFlow';
+import GramPanchayatFlow from './Registration/GramPanchayatFlow';
+import TeamLeaderFlow from './Registration/TeamLeaderFlow';
+
+const RegistrationSelector = () => {
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+
+  return (
+    <div className="card text-center">
+      <h2 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '2rem' }}>
+        {t('registrationType.title') || 'Choose Registration Type'}
+      </h2>
+      
+      <div className="flex flex-col gap-4">
+        <button 
+          className="btn btn-outline flex items-center justify-between" 
+          style={{ padding: '1.5rem', textAlign: 'left', borderRadius: '12px' }}
+          onClick={() => navigate('/register/varkari')}
+        >
+          <div className="flex items-center gap-4">
+            <div style={{ background: '#FEF3C7', padding: '1rem', borderRadius: '50%' }}>
+              <User size={32} color="var(--primary)" />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--text-main)', margin: '0 0 0.25rem 0' }}>{t('registrationType.varkariTitle') || 'Varkari'}</h3>
+              <p style={{ margin: 0, color: 'var(--text-muted)' }}>{t('registrationType.varkariDesc') || 'Register yourself or family member'}</p>
+            </div>
+          </div>
+          <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>→</span>
+        </button>
+
+        <button 
+          className="btn btn-outline flex items-center justify-between" 
+          style={{ padding: '1.5rem', textAlign: 'left', borderRadius: '12px' }}
+          onClick={() => navigate('/register/gram-panchayat')}
+        >
+          <div className="flex items-center gap-4">
+            <div style={{ background: '#FEF3C7', padding: '1rem', borderRadius: '50%' }}>
+              <Building size={32} color="var(--primary)" />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--text-main)', margin: '0 0 0.25rem 0' }}>{t('registrationType.gpTitle') || 'Gram Panchayat'}</h3>
+              <p style={{ margin: 0, color: 'var(--text-muted)' }}>{t('registrationType.gpDesc') || 'Register local authority'}</p>
+            </div>
+          </div>
+          <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>→</span>
+        </button>
+
+        <button 
+          className="btn btn-outline flex items-center justify-between" 
+          style={{ padding: '1.5rem', textAlign: 'left', borderRadius: '12px' }}
+          onClick={() => navigate('/register/team-leader')}
+        >
+          <div className="flex items-center gap-4">
+            <div style={{ background: '#FEF3C7', padding: '1rem', borderRadius: '50%' }}>
+              <Users size={32} color="var(--primary)" />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--text-main)', margin: '0 0 0.25rem 0' }}>{t('registrationType.tlTitle') || 'Team Leader'}</h3>
+              <p style={{ margin: 0, color: 'var(--text-muted)' }}>{t('registrationType.tlDesc') || 'Register Dindi / Varkari team'}</p>
+            </div>
+          </div>
+          <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>→</span>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const Registration = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
-  const [showLangModal, setShowLangModal] = useState(false);
+  const [showLangModal, React_useState] = React.useState(false);
   
-  const [formData, setFormData] = useState({
-    // Step 1
-    fullName: '',
-    age: '',
-    gender: 'Male',
-    mobile: '',
-    address: '',
-    district: '',
-    // Step 2
-    bloodGroup: 'Unknown',
-    medicalConditions: '',
-    medication: '',
-    allergies: '',
-    additionalMedicalInformation: '',
-    photoFile: null,
-    photoPreview: null,
-    // Step 3
-    guardianName: '',
-    guardianRelationship: 'Father',
-    guardianPhone: '',
-    secondaryGuardianName: '',
-    secondaryGuardianPhone: '',
-    // Step 4
-    participatingWith: 'family',
-    dindiName: '',
-    startingLocation: '',
-    startingLatitude: null,
-    startingLongitude: null,
-    startingPlaceId: '',
-    destination: 'पंढरपूर'
-  });
-
-  const updateFormData = (newData) => {
-    setFormData((prev) => ({ ...prev, ...newData }));
-  };
-
-  const getStepNumber = (pathname) => {
-    if (pathname.includes('/step1')) return 1;
-    if (pathname.includes('/step2')) return 2;
-    if (pathname.includes('/step3')) return 3;
-    if (pathname.includes('/step4')) return 4;
-    if (pathname.includes('/review')) return 5;
-    return 1;
-  };
-
-  const currentPath = window.location.pathname;
-  const currentStep = getStepNumber(currentPath);
-
-  // Exclude Success page from wizard UI
-  if (currentPath.includes('/success')) {
-    return <Success formData={formData} />;
-  }
-
   return (
     <div className="min-h-screen pb-8" style={{ background: '#f9fafb' }}>
       <header className="header" style={{ justifyContent: 'space-between', padding: '1rem 2rem', borderBottom: '1px solid var(--border)', background: 'white' }}>
@@ -78,7 +89,7 @@ const Registration = () => {
         </div>
         <div className="flex items-center gap-4">
           <button 
-            onClick={() => setShowLangModal(true)} 
+            onClick={() => React_useState(true)} 
             className="btn btn-outline flex items-center gap-2" 
             style={{ padding: '0.4rem 1rem', fontSize: '0.85rem', borderColor: 'var(--border)', borderRadius: '20px', background: 'white', color: 'var(--text-main)' }}
           >
@@ -95,33 +106,15 @@ const Registration = () => {
       </header>
 
       <main className="container pt-8 max-w-3xl mx-auto">
-        {/* Step Indicator */}
-        {currentStep <= 4 && (
-          <div className="step-indicator px-4">
-            {[1, 2, 3, 4].map((step) => (
-              <div 
-                key={step} 
-                className={`step-dot ${currentStep === step ? 'active' : ''} ${currentStep > step ? 'completed' : ''}`}
-              >
-                {step}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="card">
-          <Routes>
-            <Route path="/" element={<Navigate to="step1" replace />} />
-            <Route path="step1" element={<Step1Personal data={formData} update={updateFormData} />} />
-            <Route path="step2" element={<Step2Medical data={formData} update={updateFormData} />} />
-            <Route path="step3" element={<Step3Emergency data={formData} update={updateFormData} />} />
-            <Route path="step4" element={<Step4Wari data={formData} update={updateFormData} />} />
-            <Route path="review" element={<Review data={formData} />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/" element={<RegistrationSelector />} />
+          <Route path="varkari/*" element={<VarkariFlow />} />
+          <Route path="gram-panchayat/*" element={<GramPanchayatFlow />} />
+          <Route path="team-leader/*" element={<TeamLeaderFlow />} />
+        </Routes>
       </main>
       
-      <LanguageSelector isOpen={showLangModal} onClose={() => setShowLangModal(false)} />
+      <LanguageSelector isOpen={showLangModal} onClose={() => React_useState(false)} />
     </div>
   );
 };
