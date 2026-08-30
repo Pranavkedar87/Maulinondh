@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Step1Panchayat from './GramPanchayat/Step1Panchayat';
 import Step2Authority from './GramPanchayat/Step2Authority';
-import Step3Route from './GramPanchayat/Step3Route';
 import Review from './GramPanchayat/Review';
 import Success from './GramPanchayat/Success';
 
@@ -13,8 +12,7 @@ const GramPanchayatFlow = () => {
   const getStepNumber = (pathname) => {
     if (pathname.includes('/step1')) return 1;
     if (pathname.includes('/step2')) return 2;
-    if (pathname.includes('/step3')) return 3;
-    if (pathname.includes('/review')) return 4;
+    if (pathname.includes('/review')) return 3;
     return 1;
   };
   const currentStep = getStepNumber(location.pathname);
@@ -25,9 +23,9 @@ const GramPanchayatFlow = () => {
 
   return (
     <>
-      {currentStep <= 3 && (
+      {currentStep <= 2 && (
         <div className="step-indicator px-4">
-          {[1, 2, 3].map((step) => (
+          {[1, 2].map((step) => (
             <div key={step} className={`step-dot ${currentStep === step ? 'active' : ''} ${currentStep > step ? 'completed' : ''}`}>
               {step}
             </div>
@@ -39,7 +37,6 @@ const GramPanchayatFlow = () => {
           <Route path="/" element={<Navigate to="step1" replace />} />
           <Route path="step1" element={<Step1Panchayat data={formData} update={updateFormData} />} />
           <Route path="step2" element={<Step2Authority data={formData} update={updateFormData} />} />
-          <Route path="step3" element={<Step3Route data={formData} update={updateFormData} />} />
           <Route path="review" element={<Review data={formData} />} />
         </Routes>
       </div>

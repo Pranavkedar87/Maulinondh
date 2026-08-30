@@ -18,7 +18,7 @@ const Review = ({ data }) => {
       // Generate a unique registration ID MN-TL-2026-XXXXXX
       const randomNum = Math.floor(100000 + Math.random() * 900000);
       const regId = 'MN-TL-2026-' + randomNum;
-      const generatedPassword = Math.random().toString(36).slice(-6).toUpperCase();
+      const generatedPassword = regId; // Set password to be the same as the ID
       const email = `${regId.toLowerCase()}@maulinondh.com`;
 
       // 1. Sign up the user in Supabase Auth

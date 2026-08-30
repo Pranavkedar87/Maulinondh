@@ -10,7 +10,7 @@ const Login = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
   const [showLangModal, setShowLangModal] = useState(false);
-  const [loginType, setLoginType] = useState('PILGRIM'); // 'PILGRIM' or 'TEAM_LEADER'
+  const [loginType, setLoginType] = useState('PILGRIM'); // 'PILGRIM', 'TEAM_LEADER', 'GRAM_PANCHAYAT'
   
   const [mobile, setMobile] = useState('');
   const [userId, setUserId] = useState('');
@@ -27,7 +27,7 @@ const Login = () => {
     if (loginType === 'PILGRIM') {
       email = `${mobile}@maulinondh.com`;
     } else {
-      // User ID for Team Leader is MN-TL-2026-XXXXXX
+      // User ID for TL and GP: MN-TL-2026-XXXXXX or MN-GP-2026-XXXXXX
       email = `${userId.toLowerCase()}@maulinondh.com`;
     }
 
@@ -80,7 +80,7 @@ const Login = () => {
           {/* Login Type Tabs */}
           <div className="flex mb-4" style={{ background: '#f1f5f9', padding: '0.25rem', borderRadius: '12px' }}>
             <button 
-              className="flex-1 py-2 flex justify-center items-center gap-2 rounded-lg transition-colors"
+              className="flex-1 py-2 flex justify-center items-center gap-1 rounded-lg transition-colors text-xs"
               style={{ 
                 background: loginType === 'PILGRIM' ? 'white' : 'transparent',
                 boxShadow: loginType === 'PILGRIM' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
@@ -89,10 +89,10 @@ const Login = () => {
               }}
               onClick={() => { setLoginType('PILGRIM'); setError(''); }}
             >
-              <User size={16} /> Pilgrim
+              Pilgrim
             </button>
             <button 
-              className="flex-1 py-2 flex justify-center items-center gap-2 rounded-lg transition-colors"
+              className="flex-1 py-2 flex justify-center items-center gap-1 rounded-lg transition-colors text-xs"
               style={{ 
                 background: loginType === 'TEAM_LEADER' ? 'white' : 'transparent',
                 boxShadow: loginType === 'TEAM_LEADER' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
@@ -101,7 +101,19 @@ const Login = () => {
               }}
               onClick={() => { setLoginType('TEAM_LEADER'); setError(''); }}
             >
-              <Users size={16} /> Team Leader
+              Team Leader
+            </button>
+            <button 
+              className="flex-1 py-2 flex justify-center items-center gap-1 rounded-lg transition-colors text-xs"
+              style={{ 
+                background: loginType === 'GRAM_PANCHAYAT' ? 'white' : 'transparent',
+                boxShadow: loginType === 'GRAM_PANCHAYAT' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                color: loginType === 'GRAM_PANCHAYAT' ? 'var(--primary-dark)' : 'var(--text-muted)',
+                fontWeight: loginType === 'GRAM_PANCHAYAT' ? 'bold' : 'normal'
+              }}
+              onClick={() => { setLoginType('GRAM_PANCHAYAT'); setError(''); }}
+            >
+              Panchayat
             </button>
           </div>
 
@@ -109,7 +121,7 @@ const Login = () => {
             <div className="text-center mb-8 flex flex-col items-center">
               <img src={logo} alt="Maulinondh Logo" style={{ width: '80px', height: '80px', objectFit: 'contain', marginBottom: '1.25rem' }} />
               <h2 style={{ fontSize: '1.75rem', color: 'var(--text-main)', margin: 0, fontWeight: 700 }}>
-                {loginType === 'PILGRIM' ? t('login.title') : 'Team Leader Login'}
+                {loginType === 'PILGRIM' ? t('login.title') : loginType === 'TEAM_LEADER' ? 'Team Leader Login' : 'Panchayat Login'}
               </h2>
             </div>
             {error && <div style={{ color: 'red', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
@@ -135,7 +147,7 @@ const Login = () => {
                     className="input" 
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
-                    placeholder="MN-TL-2026-XXXXXX"
+                    placeholder={loginType === 'TEAM_LEADER' ? 'MN-TL-2026-XXXXXX' : 'MN-GP-2026-XXXXXX'}
                     style={{ textTransform: 'uppercase' }}
                     required 
                   />

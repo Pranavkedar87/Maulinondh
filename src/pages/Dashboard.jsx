@@ -56,6 +56,11 @@ const Dashboard = () => {
           navigate('/team-leader-dashboard', { state: { profileData } });
           return;
         }
+        
+        if (role === 'GRAM_PANCHAYAT') {
+          navigate('/panchayat-dashboard', { state: { profileData } });
+          return;
+        }
 
         if (profileData) {
           // If varkari is linked to a team leader, fetch the leader's emergency contact
@@ -292,6 +297,16 @@ const Dashboard = () => {
                 </a>
               </div>
             </div>
+          ) : varkari.default_safety_contact_name ? (
+            <div style={{ marginBottom: '1rem', padding: '1rem', background: '#FEF2F2', borderRadius: 'var(--radius-md)' }}>
+              <div style={{ fontSize: '0.9rem', color: 'var(--danger)', fontWeight: 'bold', marginBottom: '0.25rem' }}>Gram Panchayat Sarpanch / Safety Contact</div>
+              <div style={{ fontWeight: '500' }}>{varkari.default_safety_contact_name}</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', marginTop: '0.25rem' }}>
+                <a href={`tel:${varkari.default_safety_contact_phone}`} style={{ color: 'var(--danger)' }}>
+                  {varkari.default_safety_contact_phone}
+                </a>
+              </div>
+            </div>
           ) : (
             <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
               {t('dashboard.emergencyDesc')}
@@ -299,7 +314,7 @@ const Dashboard = () => {
           )}
 
           <a 
-            href={`tel:${varkari._teamLeader ? (varkari._teamLeader.emergency_contact_number || varkari._teamLeader.mobile_number) : '108'}`}
+            href={`tel:${varkari._teamLeader ? (varkari._teamLeader.emergency_contact_number || varkari._teamLeader.mobile_number) : varkari.default_safety_contact_phone ? varkari.default_safety_contact_phone : '108'}`}
             className="btn w-full flex items-center justify-center gap-2"
             style={{ padding: '1rem', fontSize: '1.1rem', background: 'var(--danger)', color: 'white', border: 'none', textDecoration: 'none' }}
           >
