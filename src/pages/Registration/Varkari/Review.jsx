@@ -110,7 +110,7 @@ const Review = ({ data }) => {
       if (insertError) throw insertError;
 
       // Navigate to success
-      navigate('/register/success', { state: { regId } });
+      navigate('/register/varkari/success', { state: { regId } });
 
     } catch (err) {
       console.error(err);
