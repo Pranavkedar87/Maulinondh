@@ -9,9 +9,19 @@ const Step4Wari = ({ data, update }) => {
   const [googleLoaded, setGoogleLoaded] = useState(false);
 
   useEffect(() => {
-    // Check if Google Maps is loaded
+    // Check if Google Maps is already loaded
     if (window.google && window.google.maps && window.google.maps.places) {
       setGoogleLoaded(true);
+      return;
+    }
+
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    if (apiKey && !document.querySelector('script[src*="maps.googleapis.com"]')) {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+      script.async = true;
+      script.onload = () => setGoogleLoaded(true);
+      document.head.appendChild(script);
     }
   }, []);
 
